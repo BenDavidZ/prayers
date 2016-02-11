@@ -1,0 +1,19 @@
+{% extends 'prayers/base.html' %}
+
+{% block content %}
+{% if user.is_superuser %}
+    <h1>Assign Staff to Request</h1>
+{% else %}
+    <h1>Prayer Details</h1>
+{% endif%}
+
+<form action="" method="post">
+{% csrf_token %}
+    {{ form.as_p }}
+
+<p><em>(Optional)</em> If you'd like a specific staff member to pray for you, please
+enter his or her name here. We'll do our best to match your request with that staff member.</p>
+    <input type="submit" value="Submit" />
+</form>
+<p><a href="{% url 'prayers:index' %}">Cancel</a></p>
+{% endblock %}

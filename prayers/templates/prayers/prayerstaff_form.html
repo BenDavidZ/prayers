@@ -1,0 +1,10 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+
+<form action="" method="post">
+{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />| <a href="{% url 'prayers:staff-view' %}">Cancel</a>
+</form>
+
+{% endblock %}

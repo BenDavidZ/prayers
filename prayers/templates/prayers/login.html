@@ -1,0 +1,52 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+
+{% if messages %}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% for message in messages %}
+                   <p {% if message.tags == 'error' %} class="alert alert-danger"{% endif %}>{{ message }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1> Login to Your Account </h1>       
+    </div>
+</div> 
+
+
+{% if user.is_authenticated %}
+	<p>You are already logged in {{ user.username|title }}. <a href="{% url 'prayers:index' %}">Home</a></p>
+{% else %}
+	
+	<form class="form-horizontal" role="form" id="login_form" method="post" action="{% url 'prayers:login' %}">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="username" class="col-sm-2 control-label">Username</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="username" name="username" placeholder="Enter Username">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="password" class="col-sm-2 control-label">Password</label>
+			<div class="col-sm-4">
+				<input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-2">
+				<button type="submit" class="btn btn-default">Login</button>
+			</div>
+		</div>
+		
+		
+			
+	</form>
+{% endif %}
+
+{% endblock %}
+
+			

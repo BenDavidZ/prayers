@@ -1,0 +1,30 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+<h1>Available Staff</h1>
+
+{% if object_list %}
+    <ul>
+    {% for staff in object_list %}
+        <li><strong>{{ staff.username }}</strong><br />
+            <em>{{ staff.email }}</em><br />
+            Available? {{ staff.is_active }}<br />
+            <a href="{% url 'prayers:staff-detail' pk=staff.id %}">View</a>
+            
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No staff to display.</p>
+{% endif %}
+
+<p><a href="{% url 'prayers:staff-view' %}">All Staff</a></p>
+<a href="{% url 'prayers:index' %}">Prayers Home</a>
+{% endblock %}
+
+
+
+
+
+
+
+

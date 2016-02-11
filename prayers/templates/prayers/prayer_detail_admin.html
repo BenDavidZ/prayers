@@ -1,0 +1,136 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+{% if search_string %}
+<div class="masthead">
+    <ul class="nav nav-justified text-right">
+        {% if search_string %}
+        <li>
+            <a href="{% url 'prayers:all-prayers' %}?q={{ search_string }}">Return: "{{ search_string }}"</a>
+        </li>
+
+        <li> <a href="{% url 'prayers:all-prayers' %}">Clear Search</a></li>{% endif %}
+
+        <li>
+            <form role="form" id="search" method="get" action="{% url 'prayers:all-prayers'  %}">
+            <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">
+            <button type="submit" class="btn btn-info" >Search</button>
+            </form>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% if messages %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+        {% for message in messages %}
+            <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
+        {% endfor %}
+       </div>
+    </div>
+{% endif %}   
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h2>{% if prayer.prayed_at %}Prayer complete! {% endif %}{% if prayer.response_by %}Response Sent!{% endif %}</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>{{ prayer.user_name }}</dd>
+            <dt>Email</dt>
+            <dd>{{ prayer.user_email }}</dd>
+            <dt>Assigned To</dt>
+            <dd>{{ prayer.assigned_to }}</dd>
+            <dt>Assigned At</dt>
+            <dd>{{ prayer.assigned_at|date:"D d M Y" }}</dd>
+            <dt>Prayed By</dt>
+            <dd>{{ prayer.prayed_by }}</dd>
+            <dt>Prayed At</dt>
+            <dd>{{ prayer.prayed_at|date:"D d M Y" }}</dd>
+            
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Received At</dt>
+            <dd>{{ prayer.received_at|date:"D d M Y" }}</dd>
+            <dt>Updated At</dt>
+            <dd>{{ prayer.updated_at|date:"D d M Y" }}</dd>
+            <dt><label for="assigned_to">{% if prayer.assigned_to %}Reassign{% else %}Assign{% endif %}</label></dt>
+            <dd><form role="form" id="assigned_to" method="post" action="{% url 'prayers:assign' pk=prayer.id  %}">
+            {% if not prayer.prayed_by %}
+                {% csrf_token %}
+                    <select id="assigned_to" name="assigned_to" >
+                        {% for staff in prayer_staff %}
+                        <option>{{ staff.username }} - ({{ staff.employee.unprayed_count }})</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-link" >{% if prayer.assigned_to %}Reassign{% else %}Assign{% endif %}</button>
+            </form>
+            {% else %}
+            Prayer complete.
+            {% endif %}
+            </dd>
+            <dt>Response By</dt>
+            <dd>{{ prayer.response_by }}</dd>
+            <dt>Response At</dt>
+            <dd>{{ prayer.response_at|date:"D d M Y" }}</dd>
+        </dl>
+    </div>
+</div>
+
+    
+
+
+
+
+
+{% if user.is_superuser %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        {% if prayer.prayed_at or prayer.response_at %} <!-- Display nothing -->
+        {% else %}<p><a href="{% url 'prayers:delete' pk=prayer.id %}">Delete</a>
+        {% endif %} 
+    </div>
+</div>
+{% endif %}
+
+
+
+<div class="row">
+    <div class="col-md-10"> 
+        <dl class="dl-horizontal">
+            <dt>Request</dt>
+            <dd><strong>Subject: {{ prayer.email_subject }}</strong><br></dd>
+            <dd>{{ prayer.user_request | linebreaks }}</dd>
+        </dl>
+    </div>
+</div>
+
+
+{% if prayer.response_by %}
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Response Text</dt>
+            <dd>{{ prayer.response_text|safe }}</dd>
+        </dl>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Response Text</dt>
+            <dd>No Response Sent</dd>
+        </dl>
+    </div>
+</div>
+{% endif %}
+<!-- <pre> {% filter force_escape %} {% debug | linebreaks %} {% endfilter %} </pre> -->
+
+{% endblock %}

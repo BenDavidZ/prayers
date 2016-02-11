@@ -1,0 +1,37 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+
+{% if messages %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+        {% for message in messages %}
+            <p {% if message.tags == 'success' %} class="alert alert-success"
+            {% elif message.tags == 'error' %} class="alert alert-danger"{% endif %}>
+            {{ message }}</p>
+
+        {% endfor %}
+       
+       </div>
+    </div>
+{% endif %}   
+
+<h2>Upload Prayer Requests</h2>
+
+
+
+<form class="form-horizontal" role="form" id="prayer_upload_form" method="post" action="{% url 'prayers:upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group {% if form.prayer_file.errors %} has-error {% endif %}">
+            <label for="prayer_file" class="col-sm-2 control-label">Prayer File</label>
+            <div class="col-sm-4">
+                            <input type="file" class="form-control" id="prayer_file" name="prayer_file" placeholder="{% if form.prayer_file.errors %}Required{% endif %}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-2">
+                <button type="submit" class="btn btn-default">Upload</button>
+            </div>
+        </div>
+</form>
+{% endblock %}

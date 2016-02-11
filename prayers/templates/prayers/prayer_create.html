@@ -1,0 +1,52 @@
+{% extends 'prayers/base.html' %}
+
+{% block content %}
+
+<h2>Leave a Prayer Request</h2>
+
+<form class="form-horizontal" role="form" id="login_form" method="post" action="{% url 'prayers:create' %}">
+		{% csrf_token %}
+		<div class="form-group {% if form.user_name.errors %} has-error {% endif %}">
+			<label for="name" class="col-sm-2 control-label">Name</label>
+			<div class="col-sm-4">
+                            <input type="text" class="form-control" id="name" name="user_name" placeholder="{% if form.user_name.errors %}Required{% endif %}">
+			</div>
+		</div>
+                    
+		<div class="form-group {% if form.user_email.errors %} has-error {% endif %}">
+			<label for="email" class="col-sm-2 control-label">Email</label>
+			<div class="col-sm-4">
+				<input type="email" class="form-control" id="email" name="user_email" placeholder="{% if form.user_email.errors %}Valid Email Required{% endif %}">
+			</div>
+		</div>
+                <div class="form-group{% if form.user_request.errors %} has-error {% endif %}">
+			<label for="request" class="col-sm-2 control-label">Request</label>
+			<div class="col-sm-4">
+				<textarea class="form-control" rows="5" id="id_user_request" name="user_request" rows="10" placeholder="{% if form.user_request.errors %}Required{% endif %}"></textarea>
+			</div>
+		</div>
+                <div class="form-group">
+			<label for="staff-request" class="col-sm-2 control-label">Staff Request</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="request" name="staff_request" placeholder="Optional">
+                                <span class="help-block">If you'd like a specific staff member to pray for you, please
+enter his or her name here. We'll do our best to match your request with that staff member.</span>
+			</div>
+		</div>
+		
+		
+		{{ form.captcha.errors }}<br />
+		{{ form.captcha }}
+		
+		<span class="help-block">Sorry, we don't pray for robots.</span>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-2">
+				<button type="submit" class="btn btn-default">Create</button>
+			</div>
+		</div>
+		
+		
+			
+	</form>
+           
+{% endblock %}

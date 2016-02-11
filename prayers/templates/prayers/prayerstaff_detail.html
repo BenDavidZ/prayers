@@ -1,0 +1,16 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+    
+<h1>Staff member: {{ object.fullname }}</h1>
+
+<p>Full name: {{ object.username }}</p>
+<p>Email: {{ object.email }}</p>
+<p>Availability: {{ object.is_active }}</p>
+<p></p><p></p>
+
+
+
+
+<a href="{% url 'prayers:staff-view' %}">Staff List</a>
+
+{% endblock %}

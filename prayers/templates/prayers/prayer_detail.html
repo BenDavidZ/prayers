@@ -1,0 +1,147 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4 text-center">
+        <hr style="border-color:transparent;">
+    </div>
+</div>
+
+
+
+{% if not prayer.prayed_at %}
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <ul class="nav nav-justified ">
+            <li>
+                
+                <a href="{% url 'prayers:complete' pk=prayer.id %}">Amen</a>
+                
+                <!-- <button type="submit" class="btn btn-danger" >Amen</button> -->
+                
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+
+
+{% if messages %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 text-center">
+        {% for message in messages %}
+            <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
+                {% if not prayer.prayed_at %}Click Amen to complete prayer.</a></p>{% endif %}
+        {% endfor %}
+       </div>
+    </div>
+{% endif %}   
+
+
+
+
+<!-- <div class="row">
+    <div class="col-md-12 text-center">
+        <h2>Prayer from {{ prayer.user_name }} ({{ prayer.user_email }})</h2>        
+    </div>
+</div> -->
+
+
+<!-- <div class="row">
+    <div class="col-md-12 text-center">
+        <h2>{% if prayer.prayed_at %}Prayer complete! {% endif %}{% if prayer.response_by %}Response Sent!{% endif %}</h2>
+    </div>
+</div> -->
+
+
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 text-center">
+        <hr style="border-color:black;">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>{{ prayer.user_name }}</dd>
+            <dt>Email</dt>
+            <dd>{{ prayer.user_email }}</dd>
+            <dt>Assigned To</dt>
+            <dd>{{ prayer.assigned_to.username}}</dd>
+            <dt>Assigned At</dt>
+            <dd>{{ prayer.assigned_at|date:"D d M Y" }}
+            <dt>Response By</dt>
+            <dd>{{ prayer.response_by }}</dd>
+            
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Received At</dt>
+            <dd>{{ prayer.received_at|date:"D d M Y" }}</dd>
+            <dt>Updated At</dt>
+            <dd>{{ prayer.updated_at|date:"D d M Y" }}</dd>
+            <dt>Prayed By</dt>
+            <dd>{{ prayer.prayed_by }}</dd>
+            <dt>Prayed At</dt>
+            <dd>{{ prayer.prayed_at|date:"D d M Y" }}</dd>
+            <dt>Response At</dt>
+            <dd>{{ prayer.response_at|date:"D d M Y" }}</dd>
+        </dl>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-10"> 
+        <dl class="dl-horizontal">
+            <dt>Request</dt>
+            <dd><strong>Subject: {{ prayer.email_subject }}</strong><br></dd>
+            <dd>{{ prayer.user_request | linebreaks }}</dd>
+        </dl>
+    </div>
+</div>
+
+
+{% if prayer.response_by %}
+<div class="row">
+    <div class="col-md-10">
+        <dl class="dl-horizontal">
+            <dt>Response Text</dt>
+            <dd>{{ prayer.response_text|safe}}</dd>
+        </dl>
+    </div>
+</div>
+{% endif %}
+
+
+{% if user.username = prayer.assigned_to.username and not prayer.response_by %}
+<div class="row">
+    <div class="col-md-10">
+        <form class = "form-horizontal" role="form" id="prayer_response_form" action="{%url 'prayers:respond' pk=prayer.id %}" method="post" >
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="response_text" class="col-sm-2 control-label" >Response</label>
+                    <div class="col-md-8">
+                    {{ form.response_text }}
+            <input type="hidden" name="username" value={{ user.username }}>
+            <input type="submit" value="Send Response" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+{% endblock %}

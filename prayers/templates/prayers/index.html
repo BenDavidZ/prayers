@@ -1,0 +1,129 @@
+{% extends 'prayers/base.html' %}
+
+
+{% block content %}
+
+{% if messages %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+        {% for message in messages %}
+            <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
+        {% endfor %}
+       </div>
+    </div>
+{% endif %}   
+
+{% if user.is_authenticated %}
+    
+        <div class="row">
+            <div class="col-md-12 text-center">
+            {% if user.is_superuser %}
+                <h1>Welcome {{ user.first_name }} (Admin)</h1>
+                <h2><small>All Unassigned Prayer Requests<br>
+                <a href="{% url 'prayers:upload' %}">Upload Prayers</a></small></h2>
+            {% else %}
+                
+                <h2><small>All Unfinished Prayer Requests for {{user.first_name }} {{ user.last_name }}</small></h2>
+            {% endif %}   
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 ">
+                {% if user.is_active %}
+                    {% if prayers %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>User Email</th>
+                                <th>Ministry</th>
+                                <th>Received At</th>
+                                <!-- {% if user.is_superuser %}<th>Requested Staff</th>{% endif %} -->
+                                <th>{{ prayer_count }}</th>
+                            </tr>
+                            </thead>
+                        {% for prayer in prayers %}
+                            <tbody>
+                            <tr>
+                                <td>{{ prayer.user_name }}</td>
+                                <td>{{ prayer.user_email }}</td>
+                                <td>{{ prayer.originating_ministry }}</td>
+                                <td>{{ prayer.received_at|date:"D d M Y" }}</td>
+                            {% if user.is_superuser %}
+                                <td><a href="{% url 'prayers:admin-detail' pk=prayer.id %}">View</a></td>
+                            {% else %}
+                                <td><a href="{% url 'prayers:detail' pk=prayer.id %}">View</a></td>
+                            {% endif %}
+                            </tr>
+                            </tbody>
+                            
+                            
+                        
+                        {% endfor %}
+                        
+                    
+                        </table>
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if prayers.has_previous %}
+                                    <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                                {% endif %}
+                            <span class="current">
+                                Page {{ prayers.number }} of {{ prayers.paginator.num_pages }}
+                            </span>
+                            {% if prayers.has_next %}
+                                <a href="?page={{ prayers.next_page_number }}">Next</a>
+                            {% endif %}
+                            </span>
+                        </div>
+                    {% else %}
+                        <p>No Prayers to display.</p>
+                    {% endif %}
+                {% else %}
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h2>Your status is currently Inactive. Contact administrator to activate account.</h2>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            </div>
+            
+        
+    </div>
+
+    
+{% else %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1> Welcome to the Prayer Place </h1>
+        <p>Please <a href="{% url 'prayers:login' %}">login </a>to continue.</p>       
+    </div>
+</div>  
+    {% if messages %}
+        <div class="row">
+            <div class="col-sm-12text-center">
+                {% for message in messages %}
+                   <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- <p>We'd love to pray for you.<br />
+    <a href="{% url 'prayers:create' %}">Click here</a> to leave a prayer request.</p> -->
+
+
+ 
+        
+
+        
+        
+
+
+{% endif %}
+
+
+
+{% endblock %}

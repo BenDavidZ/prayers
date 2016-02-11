@@ -1,0 +1,92 @@
+{% extends 'prayers/base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h2><small>All Prayer Requests for {{ prayer_staff.first_name }} {{ prayer_staff.last_name }}</small></h2>        
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <small><ul class="list-inline text-center">
+            <li><a href="{% url 'prayers:all-prayers-filter' id=5 %}">Red</a> = Not Prayed | Not Responded</li>
+            <li><a href="{% url 'prayers:all-prayers-filter' id=4 %}">Yellow</a> = Not Prayed | Response Sent</li>
+            <li><a href="{% url 'prayers:all-prayers-filter' id=3 %}">Blue</a> = Prayed | No Response Sent</li>
+            <li><a href="{% url 'prayers:all-prayers-filter' id=2 %}">Green</a> = Prayed | Response Sent</li>
+            <li><a href="{% url 'prayers:staff-prayerlist' pk=user.id %}">Remove Filter</a></li>
+        </ul></small>
+    </div>
+</div>
+
+
+<div class="row">
+            <div class="col-md-12 ">
+                {% if user.is_active %}
+                    {% if prayers %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                
+                                <th>User Name</th>
+                                <th>User Email</th>
+                                <th>User Request</th>
+                                <th>Prayed At</th>
+                                <th>Replied At</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                        {% for prayer in prayers %}
+                            <tbody>
+                            <tr {% if prayer.prayed_at and not prayer.response_at %} class="info" 
+                                {% elif prayer.prayed_at and prayer.response_at %} class="success" 
+                                {% elif not prayer.prayed_at and prayer.response_at %} class="warning"
+                                {% else %} class="danger"
+                                {% endif %}>
+                                <td>{{ prayer.user_name }}</td>
+                                <td>{{ prayer.user_email }}</td>
+                                <td>{{ prayer.user_request | truncatechars:50 }}</td>
+                                <td>{{ prayer.prayed_at|date:"D d M Y" }}</td>
+                                <td>{{ prayer.response_at|date:"D d M Y" }}</td>
+                                <td>
+                                    {% if user.is_superuser %}
+                                    <a href="{% url 'prayers:admin-detail' pk=prayer.id %}">View</a>
+                                    {% else %}
+                                    <a href="{% url 'prayers:detail' pk=prayer.id %}">View</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                            
+                            
+                        
+                        {% endfor %}
+                        </table>
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if prayers.has_previous %}
+                                    <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                                {% endif %}
+                            <span class="current">
+                                Page {{ prayers.number }} of {{ prayers.paginator.num_pages }}
+                            </span>
+                            {% if prayers.has_next %}
+                                <a href="?page={{ prayers.next_page_number }}">Next</a>
+                            {% endif %}
+                            </span>
+                        </div>
+                    {% else %}
+                        <p>No prayers to display.</p>
+                    {% endif %}
+                {% else %}
+                    Your status is currently Inactive. Contact administrator to activate account.
+                {% endif %}
+                
+            </div>
+
+
+
+
+
+
+{% endblock %}

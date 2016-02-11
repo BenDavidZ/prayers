@@ -1,0 +1,65 @@
+{% extends 'prayers/base.html'%}
+{% block content %}
+<h1>All Staff</h1>
+
+
+
+<div class="row">
+            <div class="col-md-12 ">
+                {% if user.is_active %}
+                    {% if object_list %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>Staff Name</th>
+                                <th>Unprayed Emails</th>
+                                <th>Active?  <small>(Click to toggle)</small></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                        {% for staff in object_list %}
+                            <tbody>
+                            <tr {% if not staff.is_active %} class="danger" {% endif %}>
+                                <td><a href="{% url 'prayers:staff-detail' pk=staff.id %}">{{ staff.first_name }} {{ staff.last_name }}</a></td>
+                                <td>{{ staff.employee.unprayed_count }}</td>
+                                <td><a href="{% url 'prayers:staff-activate' pk=staff.id %}">{{ staff.is_active }}</a></td>
+                                <td><a href="{% url 'prayers:staff-prayerlist' pk=staff.id %}">Prayer List</a>
+                                </td>
+                            </tr>
+                            </tbody>
+
+
+
+                        {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>No prayers to display.</p>
+                    {% endif %}
+                {% else %}
+                    Your status is currently Inactive. Contact administrator to activate account.
+                {% endif %}
+
+            </div>
+        </div>
+
+
+{% if user.is_superuser %}
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{% url 'admin:index' %}" target="_blank">Edit Staff</a>
+        </div>
+    </div>
+{% else %}
+    To edit staff, please contact administrator.
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
