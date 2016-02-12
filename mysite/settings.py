@@ -24,9 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if os.environ.get('DEV_STAGE') == "Development":
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ['prayer.gotandem.com']
+ALLOWED_HOSTS = ['prayer.gotandem.com', '127.0.0.1']
 
 
 # Application definition
