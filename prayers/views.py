@@ -165,6 +165,10 @@ def upload_prayers(request):
                             rownum += 1
                     else:
                         if row:
+                            # note: because of how outlook exports emails, emails from
+                            # internal sources will be skipped because they'll
+                            # fail the '@' symbol check. should only be a problem
+                            # for prayer requests forwarded from another email box.
                             if row[3] in (rejected_emails) or '@' not in row[3]:
                                 rownum += 1
                             else:
@@ -353,9 +357,9 @@ def respond_to_prayer(request, pk):
     prayer.response_text = request.POST['response_text'].replace("\n","<br>").strip()
 
     if prayer.originating_ministry == 'goTandem':
-        send_mandrill_email('goTandem - Prayer Request Response', [test_email], context={'prayer_response': prayer.response_text})
+        send_mandrill_email('goTandem - Prayer Request Response', [prayer.user_email, "ben.zuehlke@gotandem.com"], context={'prayer_response': prayer.response_text})
     else:
-        send_mandrill_email('BttB - Prayer Request Response', [test_email], context={'prayer_response': prayer.response_text})
+        send_mandrill_email('BttB - Prayer Request Response', [prayer.user_email, "ben.zuehlke@gotandem.com"], context={'prayer_response': prayer.response_text})
     messages.success(request, "Response sent.")
     prayer.save()
 
