@@ -183,7 +183,15 @@ def upload_prayers(request):
                                     originating_ministry = "Unknown"
                                     response_text = prayer_text_bttb
                                 new_request = clean_user_request(user_request)
-                                new_prayer = Prayer.objects.create(email_subject=unicode(email_subject, errors='ignore'), user_name=unicode(user_name, errors='ignore'), user_email=user_email, user_request=unicode(new_request, errors='ignore'), originating_ministry=originating_ministry, response_text=response_text, received_at=received_at)
+                                new_prayer = Prayer.objects.create(
+                                  email_subject=unicode(email_subject, errors='ignore'),
+                                  user_name=unicode(user_name, errors='ignore'),
+                                  user_email=user_email,
+                                  user_request=unicode(new_request, errors='ignore'),
+                                  originating_ministry=originating_ministry,
+                                  response_text=response_text,
+                                  received_at=received_at
+                                  )
                                 new_prayer.save()
                                 rownum += 1
 
@@ -427,5 +435,3 @@ def staff_active_toggle(request, pk):
 class PrayerStaffDetailView(generic.DetailView):
     model = User
     template_name = 'prayers/prayerstaff_detail.html'
-
-
