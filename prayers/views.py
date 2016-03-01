@@ -26,9 +26,9 @@ rejected_emails = ('messages-noreply@linkedin.com',
                    'invitation@whereareyounow.net',
                    )
 
-prayer_text = "Thank you for sharing your prayer request with us.\n\nWe appreciate that you've shared your prayer request with us. Lifting up the prayer needs of our <i>goTandem</i> community is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at <i>goTandem</i>\n\n"
+prayer_text = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our <i>goTandem</i> community is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at <i>goTandem</i>\n\n"
 
-prayer_text_bttb = "Thank you for sharing your prayer request with us.\n\nWe appreciate that you've shared your prayer request with us. Lifting up the prayer needs of our Back to the Bible family is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at Back to the Bible\n\n"
+prayer_text_bttb = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our Back to the Bible family is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at Back to the Bible\n\n"
 
 
 def all_prayers_filter(request, id):
