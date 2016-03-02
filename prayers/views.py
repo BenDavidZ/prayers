@@ -16,6 +16,7 @@ from prayers.models import Prayer, Employee
 from prayers.models import PrayerForm, StaffAssignForm, UploadFileForm, PrayerResponseForm, DeleteForm
 from django_mandrill.mail import MandrillTemplateMail
 import csv
+import os
 
 tech_support_email = "info@gotandem.com"
 test_email = "wlsupport@backtothebible.org"
@@ -356,10 +357,17 @@ def respond_to_prayer(request, pk):
     prayer.response_at = timezone.now()
     prayer.response_text = request.POST['response_text'].replace("\n","<br>").strip()
 
-    if prayer.originating_ministry == 'goTandem':
-        send_mandrill_email('goTandem - Prayer Request Response', [prayer.user_email, "ben.zuehlke@gotandem.com"], context={'prayer_response': prayer.response_text})
+    #if on Development server, send responses to different email address.
+
+    if os.environ.get('DEV_STAGE') == "Development":
+        response_address = "ben.zuehlke@gotandem.com"
     else:
-        send_mandrill_email('BttB - Prayer Request Response', [prayer.user_email, "ben.zuehlke@gotandem.com"], context={'prayer_response': prayer.response_text})
+        response_address = prayer.user_email
+
+    if prayer.originating_ministry == 'goTandem':
+        send_mandrill_email('goTandem - Prayer Request Response', [response_address], context={'prayer_response': prayer.response_text})
+    else:
+        send_mandrill_email('BttB - Prayer Request Response', [response_address], context={'prayer_response': prayer.response_text})
     messages.success(request, "Response sent.")
     prayer.save()
 
