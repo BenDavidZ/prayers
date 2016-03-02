@@ -419,11 +419,28 @@ class PrayerStaffView(generic.ListView):
     template_name = 'prayers/prayerstaff_list.html'
     queryset = User.objects.all().exclude(is_superuser=True).order_by('username')
 
-def staff_prayer_list(request, pk):
-    prayer_list = Prayer.objects.filter(assigned_to=pk).order_by('-created_at')
+def staff_prayer_list(request, pk, id=0):
+
+    # id 0 = all prayers for user
+    # id 2 = prayed | replied
+    # id 3 = prayed | no reply
+    # id 4 = not prayed | replied
+    # id 5 = not prayed | no reply
+
+    if id == "2":
+        prayer_list = Prayer.objects.filter(assigned_to=pk).filter(prayed_at__isnull=False).filter(response_at__isnull=False).order_by('received_at')
+    elif id == "3":
+        prayer_list = Prayer.objects.filter(assigned_to=pk).filter(prayed_at__isnull=False).filter(response_at__isnull=True).order_by('received_at')
+    elif id == "4":
+        prayer_list = Prayer.objects.filter(assigned_to=pk).filter(prayed_at__isnull=True).filter(response_at__isnull=False).order_by('received_at')
+    elif id == "5":
+        prayer_list = Prayer.objects.filter(assigned_to=pk).filter(prayed_at__isnull=True).filter(response_at__isnull=True).order_by('received_at')
+    else:
+        prayer_list = Prayer.objects.filter(assigned_to=pk).order_by('-created_at')
+
     prayer_staff = User.objects.get(id=pk)
 
-    paginator = Paginator(prayer_list, 10)
+    paginator = Paginator(prayer_list, 15)
     page = request.GET.get('page')
     try:
         prayers = paginator.page(page)

@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     #url(r'^prayerstaff/available/$', views.PrayerStaffAvailableView.as_view(), name='staff-availability'),
     url(r'^prayerstaff/(?P<pk>\d+)/$', views.PrayerStaffDetailView.as_view(), name='staff-detail'),
     url(r'^prayerstaff/(?P<pk>\d+)/staffprayerlist/$', views.staff_prayer_list, name='staff-prayerlist'),
+    url(r'^prayerstaff/(?P<pk>\d+)/staffprayerlist/filter=(?P<id>\d+)/$', views.staff_prayer_list, name='staff-prayerlist-filter'),
     url(r'^prayerstaff/(?P<pk>\d+)/activate/$', views.staff_active_toggle, name='staff-activate'),
     #url(r'^prayerstaff/(?P<pk>\d+)/assign/$', views.staff_assign, name='staff-assign'),
     #url(r'^prayerstaff/(?P<pk>\d+)/update$', views.PrayerStaffUpdateView.as_view(), name='staff-update'),
@@ -40,4 +41,3 @@ urlpatterns = patterns('',
 
 
 )
-

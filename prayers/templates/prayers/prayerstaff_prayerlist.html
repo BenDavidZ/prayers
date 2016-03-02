@@ -3,17 +3,17 @@
 
 <div class="row">
     <div class="col-md-12 text-center">
-        <h2><small>All Prayer Requests for {{ prayer_staff.first_name }} {{ prayer_staff.last_name }}</small></h2>        
+        <h2><small>All Prayer Requests for {{ prayer_staff.first_name }} {{ prayer_staff.last_name }}</small></h2>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <small><ul class="list-inline text-center">
-            <li><a href="{% url 'prayers:all-prayers-filter' id=5 %}">Red</a> = Not Prayed | Not Responded</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=4 %}">Yellow</a> = Not Prayed | Response Sent</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=3 %}">Blue</a> = Prayed | No Response Sent</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=2 %}">Green</a> = Prayed | Response Sent</li>
+            <li><a href="{% url 'prayers:staff-prayerlist-filter' pk=user.id id=5 %}">Red</a> = Not Prayed | Not Responded</li>
+            <li><a href="{% url 'prayers:staff-prayerlist-filter' pk=user.id id=4 %}">Yellow</a> = Not Prayed | Response Sent</li>
+            <li><a href="{% url 'prayers:staff-prayerlist-filter' pk=user.id  id=3 %}">Blue</a> = Prayed | No Response Sent</li>
+            <li><a href="{% url 'prayers:staff-prayerlist-filter' pk=user.id  id=2 %}">Green</a> = Prayed | Response Sent</li>
             <li><a href="{% url 'prayers:staff-prayerlist' pk=user.id %}">Remove Filter</a></li>
         </ul></small>
     </div>
@@ -27,7 +27,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                
+
                                 <th>User Name</th>
                                 <th>User Email</th>
                                 <th>User Request</th>
@@ -38,8 +38,8 @@
                             </thead>
                         {% for prayer in prayers %}
                             <tbody>
-                            <tr {% if prayer.prayed_at and not prayer.response_at %} class="info" 
-                                {% elif prayer.prayed_at and prayer.response_at %} class="success" 
+                            <tr {% if prayer.prayed_at and not prayer.response_at %} class="info"
+                                {% elif prayer.prayed_at and prayer.response_at %} class="success"
                                 {% elif not prayer.prayed_at and prayer.response_at %} class="warning"
                                 {% else %} class="danger"
                                 {% endif %}>
@@ -57,9 +57,9 @@
                                 </td>
                             </tr>
                             </tbody>
-                            
-                            
-                        
+
+
+
                         {% endfor %}
                         </table>
                         <div class="pagination">
@@ -81,7 +81,7 @@
                 {% else %}
                     Your status is currently Inactive. Contact administrator to activate account.
                 {% endif %}
-                
+
             </div>
 
 
