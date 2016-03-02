@@ -286,6 +286,7 @@ def admin_detail_view(request, pk):
     search_string = request.GET.get('q')
 
     return render(request, 'prayers/prayer_detail_admin.html', {'prayer': prayer, 'prayer_staff': prayer_staff, 'search_string': search_string})
+
 @login_required
 def delete_prayer_request(request, pk):
     prayer = Prayer.objects.get(id=pk)
