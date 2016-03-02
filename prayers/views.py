@@ -408,6 +408,7 @@ def complete_prayer(request, pk):
     messages.success(request, 'Prayer marked as complete.')
     return HttpResponseRedirect(reverse('prayers:index'))
 
+
 class DeleteView(generic.DeleteView):
     model = Prayer
     success_url = reverse_lazy('prayers:index')

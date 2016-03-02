@@ -14,11 +14,11 @@
     <div class="col-md-4 col-md-offset-4">
         <ul class="nav nav-justified ">
             <li>
-                
-                <a href="{% url 'prayers:complete' pk=prayer.id %}">Amen</a>
-                
+
+                <a href="{% url 'prayers:complete' pk=prayer.id %}" onclick="clickAndDisable(this);">Amen</a>
+
                 <!-- <button type="submit" class="btn btn-danger" >Amen</button> -->
-                
+
             </li>
         </ul>
     </div>
@@ -36,14 +36,14 @@
         {% endfor %}
        </div>
     </div>
-{% endif %}   
+{% endif %}
 
 
 
 
 <!-- <div class="row">
     <div class="col-md-12 text-center">
-        <h2>Prayer from {{ prayer.user_name }} ({{ prayer.user_email }})</h2>        
+        <h2>Prayer from {{ prayer.user_name }} ({{ prayer.user_email }})</h2>
     </div>
 </div> -->
 
@@ -75,7 +75,7 @@
             <dd>{{ prayer.assigned_at|date:"D d M Y" }}
             <dt>Response By</dt>
             <dd>{{ prayer.response_by }}</dd>
-            
+
         </dl>
     </div>
     <div class="col-md-6">
@@ -96,7 +96,7 @@
 
 
 <div class="row">
-    <div class="col-md-10"> 
+    <div class="col-md-10">
         <dl class="dl-horizontal">
             <dt>Request</dt>
             <dd><strong>Subject: {{ prayer.email_subject }}</strong><br></dd>
@@ -135,8 +135,14 @@
     </div>
 </div>
 
-
-
+<!-- script to disable "Amen" link after clicking. -->
+<script>
+  function clickAndDisable(link) {
+    link.onclick = function(event) {
+        event.preventDefault();
+    }
+  }
+</script>
 
 
 {% endif %}
