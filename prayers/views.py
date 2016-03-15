@@ -466,3 +466,5 @@ def staff_active_toggle(request, pk):
 class PrayerStaffDetailView(generic.DetailView):
     model = User
     template_name = 'prayers/prayerstaff_detail.html'
+
+#Testing something.
