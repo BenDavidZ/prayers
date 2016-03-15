@@ -41,14 +41,14 @@ class Prayer(models.Model):
     reassign = models.BooleanField(default=False)
     tech_support = models.BooleanField(default=False)
     curr_assigned_to = models.CharField(max_length=50, null=True, blank=True)
-    
-   
+
+
     def __unicode__(self):
         return self.user_name
-    
+
     def get_absolute_url(self):
         return reverse('prayers:index')
-    
+
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.CharField(max_length=50, null=True, blank=True)
@@ -60,15 +60,13 @@ class Employee(models.Model):
 class DeleteForm(ModelForm):
     class Meta:
         model = Prayer
-        fields = ['user_name', 'user_email', 'user_request'] 
+        fields = ['user_name', 'user_email', 'user_request']
 
 class PrayerForm(ModelForm):
-    #captcha = CaptchaField()
-    
     class Meta:
         model = Prayer
-        fields = ['user_name', 'user_email', 'user_request', 'staff_request']
-        
+        fields = ['user_name', 'user_email', 'originating_ministry', 'user_request', 'received_at']
+
 class StaffAssignForm(ModelForm):
     class Meta:
         model = Prayer
@@ -79,7 +77,7 @@ class PrayerResponseForm(ModelForm):
 
     class Meta:
         model = Prayer
-        fields = ['response_text']        
+        fields = ['response_text']
 
 
 
@@ -87,5 +85,3 @@ class PrayerResponseForm(ModelForm):
 def ensure_profile_exists(sender, **kwargs):
     if kwargs.get('created', False):
         Employee.objects.get_or_create(user=kwargs.get('instance'))
-
-    

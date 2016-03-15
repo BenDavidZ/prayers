@@ -27,9 +27,9 @@ rejected_emails = ('messages-noreply@linkedin.com',
                    'invitation@whereareyounow.net',
                    )
 
-prayer_text = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our <i>goTandem</i> community is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at <i>goTandem</i>\n\n"
+prayer_text = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our <i>goTandem</i> community is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at <i>goTandem</i>\n\nP.S We'd also appreciate your prayers for our ministry as we continue to share God's Word with people all over the world.\n\n"
 
-prayer_text_bttb = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our Back to the Bible family is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at Back to the Bible\n\n"
+prayer_text_bttb = "Thank you for sharing your prayer request with us.\n\nLifting up the prayer needs of our Back to the Bible family is a key part of our ministry. It's my privilege to pray for you and the concerns that are weighing on your heart.\n\nPlease let us know if you have any other requests.\n\nYour friends at Back to the Bible\n\nP.S We'd also appreciate your prayers for our ministry as we continue to share God's Word with people all over the world.\n\n"
 
 
 def all_prayers_filter(request, id):
@@ -261,7 +261,12 @@ def create_prayer(request):
     if request.method == 'POST':
         form = PrayerForm(request.POST)
         if form.is_valid():
-            form.save()
+            prayer = form.save(commit=False)
+            if prayer.originating_ministry == "Back to the Bible":
+                prayer.response_text = prayer_text_bttb
+            else:
+                prayer.response_text = prayer_text
+            prayer.save()
             messages.success(request, 'Prayer saved. Thank you.')
             return HttpResponseRedirect(reverse('prayers:index'))
     else:

@@ -6,39 +6,55 @@
 
 <form class="form-horizontal" role="form" id="login_form" method="post" action="{% url 'prayers:create' %}">
 		{% csrf_token %}
-		<div class="form-group {% if form.user_name.errors %} has-error {% endif %}">
+
+        <!-- Name Field -->
+
+        <div class="form-group">
 			<label for="name" class="col-sm-2 control-label">Name</label>
 			<div class="col-sm-4">
-      <input type="text" class="form-control" id="name" name="user_name" placeholder="{% if form.user_name.errors %}Required{% endif %}">
+                <input type="text" class="form-control" id="name" name="user_name" placeholder="Name">
 			</div>
 		</div>
 
-		<div class="form-group {% if form.user_email.errors %} has-error {% endif %}">
+        <!-- Email Field -->
+
+        <div class="form-group">
 			<label for="email" class="col-sm-2 control-label">Email</label>
 			<div class="col-sm-4">
-				<input type="email" class="form-control" id="email" name="user_email" placeholder="{% if form.user_email.errors %}Valid Email Required{% endif %}">
+				<input type="email" class="form-control" id="email" name="user_email" placeholder="Email">
 			</div>
 		</div>
-      <div class="form-group{% if form.user_request.errors %} has-error {% endif %}">
+
+        <!-- Prayer Request Field -->
+
+      <div class="form-group">
 			<label for="id_user_request" class="col-sm-2 control-label">Request</label>
 			<div class="col-sm-4">
-				<textarea class="form-control" rows="5" id="id_user_request" name="user_request" rows="10" placeholder="{% if form.user_request.errors %}Required{% endif %}"></textarea>
+				<textarea class="form-control" rows="5" id="id_user_request" name="user_request" rows="10" placeholder="Required"></textarea>
 			</div>
-		</div>
-      <div class="form-group">
-			<label for="staff-request" class="col-sm-2 control-label">Staff Request</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" id="staff-request" name="staff_request" placeholder="Optional">
-        <span class="help-block">If you'd like a specific staff member to pray for you, please
-enter his or her name here. We'll do our best to match your request with that staff member.</span>
-			</div>
-		</div>
+      </div>
 
+        <!-- Requesting Ministry Field -->
 
-		{{ form.captcha.errors }}<br />
-		{{ form.captcha }}
+        <div class="form-group">
+  			<label for="id_originating_ministry" class="col-sm-2 control-label">Ministry</label>
+  			<div class="col-sm-4">
+  				<select name="originating_ministry">
+                    <option value="Back to the Bible">Back to the Bible</option>
+                    <option value="goTandem">goTandem</option>
+                </select>
+  			</div>
+        </div>
 
-		<span class="help-block">Sorry, we don't pray for robots.</span>
+        <!-- Request Received At Field -->
+
+        <div class="form-group">
+  			<label for="id_received_at" class="col-sm-2 control-label">Ministry</label>
+  			<div class="col-sm-4">
+  				<input type="date" name="received_at" id="id_received_at" class="form-control">
+  			</div>
+        </div>
+
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-2">
 				<button type="submit" class="btn btn-default">Create</button>
