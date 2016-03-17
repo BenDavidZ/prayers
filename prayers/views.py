@@ -408,7 +408,7 @@ def complete_prayer(request, pk):
     p.save()
 
     staff = User.objects.get(username=p.assigned_to.username)
-    staff.employee.unprayed_count -= 1
+    staff.employee.unprayed_count = Prayer.objects.filter(assigned_to=staff, prayed_at__isnull=True).count()
     staff.employee.save()
     messages.success(request, 'Prayer marked as complete.')
     return HttpResponseRedirect(reverse('prayers:index'))
