@@ -26,7 +26,7 @@ class Command(BaseCommand):
             response_text = "%s,<br><br>New prayer requests were assigned to you recently.<br><br>You currently have %s unprayed for requests." % (p.first_name, upc)
 
 
-            send_mandrill_email('goTandem - Prayer Request Response', [p.email], context={'prayer_response': response_text})
+            send_mandrill_email('staff-prayer-reminder', [p.email], context={'prayer_response': response_text})
         self.stdout.write('Script finished.')
 
 def send_mandrill_email(template_name, email_to, context=None, curr_site=None):
