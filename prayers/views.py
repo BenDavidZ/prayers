@@ -70,11 +70,9 @@ def all_prayers_filter(request, id):
         return render(request, 'prayers/prayerstaff_prayerlist.html', context)
 
 
-
 def update_unprayed_count(prayer_info):
     prayer = prayer_info['prayer']
     staff = prayer_info['staff']
-
 
     if prayer.assigned_to.username == prayer.curr_assigned_to:
         increment_unprayed_count(staff)
@@ -85,9 +83,11 @@ def update_unprayed_count(prayer_info):
         prayer.curr_assigned_to = staff.username
     prayer.save()
 
+
 def increment_unprayed_count(staff):
     staff.employee.unprayed_count += 1
     staff.employee.save()
+
 
 def decrement_unprayed_count(staff):
     staff.employee.unprayed_count -= 1
@@ -101,6 +101,7 @@ def clean_user_request(user_request):
     new_request, sep, tail = user_request.partition(divider)
     return new_request
 
+
 # development function. resets unprayed_count for all users to 0
 @login_required
 def reset_unprayed_count(request):
@@ -111,11 +112,12 @@ def reset_unprayed_count(request):
 
     return HttpResponseRedirect(reverse('prayers:index'))
 
+
 # development function. toggles active status for all users (except superusers)
 @login_required
 def active_status_switch(request):
     all_staff = User.objects.filter(is_superuser=False)
-    if all_staff[0].is_active == True:
+    if all_staff[0].is_active:
         for staff in all_staff:
             staff.is_active = False
             staff.save()
@@ -125,6 +127,7 @@ def active_status_switch(request):
             staff.save()
 
     return HttpResponseRedirect(reverse('prayers:staff-view'))
+
 
 def forward_tech_support(request, pk):
     prayer = get_object_or_404(Prayer, id=pk)
@@ -142,8 +145,6 @@ def forward_tech_support(request, pk):
     return HttpResponseRedirect(reverse('prayers:admin-detail', args=[pk]))
 
 
-
-
 @login_required
 def upload_prayers(request):
 
@@ -155,7 +156,7 @@ def upload_prayers(request):
                 messages.error(request, 'Invalid file type. Please enter a .csv file.')
                 return HttpResponseRedirect(reverse('prayers:upload'))
             else:
-                reader = csv.reader(prayer_file,delimiter=',', quotechar='"')
+                reader = csv.reader(prayer_file, delimiter=',', quotechar='"')
                 rownum = 0
                 for row in reader:
                     if rownum == 0:
@@ -189,14 +190,14 @@ def upload_prayers(request):
                                     response_text = prayer_text_bttb
                                 new_request = clean_user_request(user_request)
                                 new_prayer = Prayer.objects.create(
-                                  email_subject=unicode(email_subject, errors='ignore'),
-                                  user_name=unicode(user_name, errors='ignore'),
-                                  user_email=user_email,
-                                  user_request=unicode(new_request, errors='ignore'),
-                                  originating_ministry=originating_ministry,
-                                  response_text=response_text,
-                                  received_at=received_at
-                                  )
+                                    email_subject=unicode(email_subject, errors='ignore'),
+                                    user_name=unicode(user_name, errors='ignore'),
+                                    user_email=user_email,
+                                    user_request=unicode(new_request, errors='ignore'),
+                                    originating_ministry=originating_ministry,
+                                    response_text=response_text,
+                                    received_at=received_at
+                                )
                                 new_prayer.save()
                                 rownum += 1
 
@@ -205,7 +206,6 @@ def upload_prayers(request):
         form = UploadFileForm()
 
     return render(request, 'prayers/prayer_upload.html', {'form': form})
-
 
 
 def user_login(request):
@@ -223,7 +223,6 @@ def user_login(request):
             return HttpResponseRedirect(reverse('prayers:login'))
     else:
         return render_to_response('prayers/login.html', {}, context)
-
 
 
 @login_required
@@ -256,6 +255,7 @@ def prayer_index(request):
     context = {'prayers': prayers, 'prayer_count': prayer_count}
     return render(request, 'prayers/index.html', context)
 
+
 @login_required
 def create_prayer(request):
     if request.method == 'POST':
@@ -273,9 +273,11 @@ def create_prayer(request):
         form = PrayerForm()
     return render(request, 'prayers/prayer_create.html', {'form': form})
 
+
 @login_required
 def resources_view(request):
     return render(request, 'prayers/prayer_resources.html')
+
 
 @login_required
 def detail_view(request, pk):
@@ -284,6 +286,7 @@ def detail_view(request, pk):
     form = PrayerResponseForm(initial={'response_text': prayer.response_text})
     return render(request, 'prayers/prayer_detail.html', {'prayer': prayer, 'prayer_staff': prayer_staff, 'form': form})
 
+
 @login_required
 def admin_detail_view(request, pk):
     prayer = get_object_or_404(Prayer, id=pk)
@@ -291,6 +294,7 @@ def admin_detail_view(request, pk):
     search_string = request.GET.get('q')
 
     return render(request, 'prayers/prayer_detail_admin.html', {'prayer': prayer, 'prayer_staff': prayer_staff, 'search_string': search_string})
+
 
 @login_required
 def delete_prayer_request(request, pk):
@@ -311,6 +315,7 @@ def delete_prayer_request(request, pk):
         form = DeleteForm()
     return render(request, 'prayers/prayer_confirm_delete.html', {'form': form, 'prayer': prayer})
 
+
 def assign_prayer(request, pk):
     prayer = get_object_or_404(Prayer, id=pk)
 
@@ -322,8 +327,8 @@ def assign_prayer(request, pk):
     prayer.assigned_to = staff
     prayer.assigned_at = timezone.now()
 
-    #if a prayer is new...
-    if prayer.reassign == False:
+    # if a prayer is new...
+    if not prayer.reassign:
         prayer.reassign = True
         prayer.curr_assigned_to = staff.username
     prayer.save()
@@ -332,6 +337,7 @@ def assign_prayer(request, pk):
     messages.success(request, 'Request assigned.')
 
     return HttpResponseRedirect(reverse('prayers:index'))
+
 
 def all_prayers_view(request):
 
@@ -355,15 +361,14 @@ def all_prayers_view(request):
         return render(request, 'prayers/prayer_allprayers.html', context)
 
 
-
 def respond_to_prayer(request, pk):
     prayer = get_object_or_404(Prayer, id=pk)
 
     prayer.response_by = request.POST['username']
     prayer.response_at = timezone.now()
-    prayer.response_text = request.POST['response_text'].replace("\n","<br>").strip()
+    prayer.response_text = request.POST['response_text'].replace("\n", "<br>").strip()
 
-    #if on Development server, send responses to different email address.
+    # if on Development server, send responses to different email address.
 
     if os.environ.get('DEV_STAGE') == "Development":
         response_address = "ben.zuehlke@gotandem.com"
@@ -378,6 +383,7 @@ def respond_to_prayer(request, pk):
     prayer.save()
 
     return HttpResponseRedirect(reverse('prayers:detail', args=[pk]))
+
 
 def send_mandrill_email(template_name, email_to, context=None, curr_site=None):
     if context is None:
@@ -396,6 +402,7 @@ def send_mandrill_email(template_name, email_to, context=None, curr_site=None):
         )
 
     MandrillTemplateMail(template_name, [], message).send()
+
 
 def complete_prayer(request, pk):
     try:
@@ -423,6 +430,7 @@ class PrayerStaffView(generic.ListView):
     model = User
     template_name = 'prayers/prayerstaff_list.html'
     queryset = User.objects.all().exclude(is_superuser=True).order_by('username')
+
 
 def staff_prayer_list(request, pk, id=0):
 
@@ -471,5 +479,3 @@ def staff_active_toggle(request, pk):
 class PrayerStaffDetailView(generic.DetailView):
     model = User
     template_name = 'prayers/prayerstaff_detail.html'
-
-#Testing something.

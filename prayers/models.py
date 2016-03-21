@@ -8,11 +8,8 @@ from django.contrib.auth.models import User
 from django import forms
 from trix.widgets import TrixEditor
 
-#from captcha.fields import CaptchaField
-
-
-
 import datetime
+
 
 class UploadFileForm(forms.Form):
     prayer_file = forms.FileField()
@@ -34,20 +31,20 @@ class Prayer(models.Model):
     response_by = models.CharField(max_length=50, null=True, blank=True)
     response_at = models.DateTimeField(null=True, blank=True)
     originating_ministry = models.CharField(max_length=50, null=True)
-    response_in_progress = models.BooleanField(default=False) #may not need
-    in_prayer = models.BooleanField(default=False) #consider removing
-    is_new = models.BooleanField(default=True) #may not need either
+    response_in_progress = models.BooleanField(default=False)  # may not need
+    in_prayer = models.BooleanField(default=False)  # consider removing
+    is_new = models.BooleanField(default=True)  # may not need either
     staff_request = models.CharField(max_length=50, null=True, blank=True)
     reassign = models.BooleanField(default=False)
     tech_support = models.BooleanField(default=False)
     curr_assigned_to = models.CharField(max_length=50, null=True, blank=True)
-
 
     def __unicode__(self):
         return self.user_name
 
     def get_absolute_url(self):
         return reverse('prayers:index')
+
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -57,20 +54,24 @@ class Employee(models.Model):
     def __unicode__(self):
         return self.user.username
 
+
 class DeleteForm(ModelForm):
     class Meta:
         model = Prayer
         fields = ['user_name', 'user_email', 'user_request']
+
 
 class PrayerForm(ModelForm):
     class Meta:
         model = Prayer
         fields = ['user_name', 'user_email', 'originating_ministry', 'user_request', 'received_at']
 
+
 class StaffAssignForm(ModelForm):
     class Meta:
         model = Prayer
         fields = ['user_name', 'user_email', 'user_request', 'staff_request', 'assigned_to']
+
 
 class PrayerResponseForm(ModelForm):
     response_text = forms.CharField(widget=TrixEditor)
@@ -78,7 +79,6 @@ class PrayerResponseForm(ModelForm):
     class Meta:
         model = Prayer
         fields = ['response_text']
-
 
 
 @receiver(post_save, sender=User)
