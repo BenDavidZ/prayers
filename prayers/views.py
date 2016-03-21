@@ -18,6 +18,7 @@ from prayers.models import PrayerForm, StaffAssignForm, UploadFileForm, PrayerRe
 from django_mandrill.mail import MandrillTemplateMail
 import csv
 import os
+import xlrd
 import datetime
 
 tech_support_email = "info@gotandem.com"
@@ -160,38 +161,45 @@ def upload_prayers(request):
                 messages.error(request, 'This file already uploaded.')
                 return HttpResponseRedirect(reverse('prayers:upload'))
 
-            if prayer_file.name[-4:].lower() != ".csv":
-                messages.error(request, 'Invalid file type. Please enter a .csv file.')
-                return HttpResponseRedirect(reverse('prayers:upload'))
+            # if prayer_file.name[-4:].lower() != ".csv":
+            #     messages.error(request, 'Invalid file type. Please enter a .csv file.')
+            #     return HttpResponseRedirect(reverse('prayers:upload'))
             else:
-                reader = csv.reader(prayer_file, delimiter=',', quotechar='"')
-                rownum = 0
+                workbook = xlrd.open_workbook(filename=None, file_contents=prayer_file.read())
+                sheet = workbook.sheet_by_index(0)
                 import_total = 0
-                for row in reader:
-                    if rownum == 0:
-                        if row[0] != "Subject":
-                            messages.error(request, 'Invalid data. Please enter properly formatted .csv file.')
+                for row in range(sheet.nrows):
+                    if row == 0:
+                        if sheet.cell_value(0, 0) != "Subject":
+                            messages.error(request, 'Invalid data. Please enter properly formatted file.')
                             return HttpResponseRedirect(reverse('prayers:upload'))
                         else:
-                            rownum += 1
+                            row += 1
                     else:
                         if row:
                             # note: because of how outlook exports emails, emails from
                             # internal sources will be skipped because they'll
                             # fail the '@' symbol check. should only be a problem
                             # for prayer requests forwarded from another email box.
-                            if row[3] in (rejected_emails) or '@' not in row[3]:
+                            if sheet.cell_value(row, 3) in (rejected_emails) or '@' not in sheet.cell_value(row, 3):
                                 rownum += 1
                             else:
-                                user_name = row[2]
-                                user_email = row[3]
-                                user_request = row[1]
-                                received_at = row[6]
-                                email_subject = row[0]
-                                if "goTandem" in row[5]:
+                                # user_name = row[2]
+                                user_name = sheet.cell_value(row, 2)
+                                # user_email = row[3]
+                                user_email = sheet.cell_value(row, 3)
+                                # user_request = row[1]
+                                user_request = sheet.cell_value(row, 1)
+                                # received_at = row[6]
+                                excel_time = sheet.cell_value(row, 6)
+                                year, month, day, hour, minute, second = xlrd.xldate_as_tuple(excel_time, 0)
+                                received_at = datetime.datetime(year, month, day, hour, minute, second)
+                                # email_subject = row[0]
+                                email_subject = sheet.cell_value(row, 0)
+                                if "goTandem" in sheet.cell_value(row, 5):
                                     originating_ministry = "goTandem"
                                     response_text = prayer_text
-                                elif "Bible" in row[5]:
+                                elif "Bible" in sheet.cell_value(row, 5):
                                     originating_ministry = "Back to the Bible"
                                     response_text = prayer_text_bttb
                                 else:
@@ -199,16 +207,16 @@ def upload_prayers(request):
                                     response_text = prayer_text_bttb
                                 new_request = clean_user_request(user_request)
                                 new_prayer = Prayer.objects.create(
-                                    email_subject=unicode(email_subject, errors='ignore'),
-                                    user_name=unicode(user_name, errors='ignore'),
+                                    email_subject=email_subject,
+                                    user_name=user_name,
                                     user_email=user_email,
-                                    user_request=unicode(new_request, errors='ignore'),
+                                    user_request=new_request,
                                     originating_ministry=originating_ministry,
                                     response_text=response_text,
                                     received_at=received_at
                                 )
                                 new_prayer.save()
-                                rownum += 1
+                                row += 1
                                 import_total += 1
                 success_message = '%s prayer(s) sucessfully uploaded.' % import_total
                 messages.success(request, success_message)
