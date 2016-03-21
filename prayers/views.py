@@ -9,10 +9,11 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
+from django.db import IntegrityError
 from django.db.models import Q
 
 from django.contrib.auth.models import User
-from prayers.models import Prayer, Employee
+from prayers.models import Prayer, Employee, PrayerFile
 from prayers.models import PrayerForm, StaffAssignForm, UploadFileForm, PrayerResponseForm, DeleteForm
 from django_mandrill.mail import MandrillTemplateMail
 import csv
@@ -152,6 +153,12 @@ def upload_prayers(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             prayer_file = request.FILES['prayer_file']
+            try:
+                PrayerFile.objects.create(file_name=prayer_file.name)
+            except IntegrityError:
+                messages.error(request, 'This file already uploaded.')
+                return HttpResponseRedirect(reverse('prayers:upload'))
+
             if prayer_file.name[-4:].lower() != ".csv":
                 messages.error(request, 'Invalid file type. Please enter a .csv file.')
                 return HttpResponseRedirect(reverse('prayers:upload'))

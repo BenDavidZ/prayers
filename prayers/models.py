@@ -55,6 +55,15 @@ class Employee(models.Model):
         return self.user.username
 
 
+# Simple model to hold list of uploaded files. Used to prevent uploading of same file again.
+class PrayerFile(models.Model):
+    created_at = models.DateTimeField('date uploaded', auto_now_add=True)
+    file_name = models.CharField(max_length=100, unique=True)
+
+    def __unicode__(self):
+        return self.file_name
+
+
 class DeleteForm(ModelForm):
     class Meta:
         model = Prayer
