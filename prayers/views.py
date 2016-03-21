@@ -18,6 +18,7 @@ from prayers.models import PrayerForm, StaffAssignForm, UploadFileForm, PrayerRe
 from django_mandrill.mail import MandrillTemplateMail
 import csv
 import os
+import datetime
 
 tech_support_email = "info@gotandem.com"
 test_email = "wlsupport@backtothebible.org"
@@ -165,6 +166,7 @@ def upload_prayers(request):
             else:
                 reader = csv.reader(prayer_file, delimiter=',', quotechar='"')
                 rownum = 0
+                import_total = 0
                 for row in reader:
                     if rownum == 0:
                         if row[0] != "Subject":
@@ -207,7 +209,9 @@ def upload_prayers(request):
                                 )
                                 new_prayer.save()
                                 rownum += 1
-
+                                import_total += 1
+                success_message = '%s prayer(s) sucessfully uploaded.' % import_total
+                messages.success(request, success_message)
                 return HttpResponseRedirect(reverse('prayers:index'))
     else:
         form = UploadFileForm()
