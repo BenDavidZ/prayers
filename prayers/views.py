@@ -161,9 +161,10 @@ def upload_prayers(request):
                 messages.error(request, 'This file already uploaded.')
                 return HttpResponseRedirect(reverse('prayers:upload'))
 
-            # if prayer_file.name[-4:].lower() != ".csv":
-            #     messages.error(request, 'Invalid file type. Please enter a .csv file.')
-            #     return HttpResponseRedirect(reverse('prayers:upload'))
+            if prayer_file.name[-5:].lower() != ".xlsx":
+                messages.error(request, 'Invalid file type. Please enter a .xlsx file.')
+                PrayerFile.objects.get(file_name=prayer_file.name).delete()
+                return HttpResponseRedirect(reverse('prayers:upload'))
             else:
                 workbook = xlrd.open_workbook(filename=None, file_contents=prayer_file.read())
                 sheet = workbook.sheet_by_index(0)
@@ -171,6 +172,7 @@ def upload_prayers(request):
                 for row in range(sheet.nrows):
                     if row == 0:
                         if sheet.cell_value(0, 0) != "Subject":
+                            prayerFile.objects.get(file_name=prayer_file.name).delete()
                             messages.error(request, 'Invalid data. Please enter properly formatted file.')
                             return HttpResponseRedirect(reverse('prayers:upload'))
                         else:
@@ -338,7 +340,7 @@ def delete_prayer_request(request, pk):
 def assign_prayer(request, pk):
     prayer = get_object_or_404(Prayer, id=pk)
 
-    # assigned_to list presented in template as : username - (x) with x being
+    # assigned_to list presented in template as: username - (x) with x being
     # unprayed_count for user. split off the username from rest when trying
     # to find User.
 

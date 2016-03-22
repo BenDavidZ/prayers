@@ -65,15 +65,19 @@
                         <div class="pagination">
                             <span class="step-links">
                                 {% if prayers.has_previous %}
+                                    <a href="?page=1">First</a> |
                                     <a href="?page={{ prayers.previous_page_number }}">Previous</a>
                                 {% endif %}
-                            <span class="current">
-                                Page {{ prayers.number }} of {{ prayers.paginator.num_pages }}
+                                 | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                                {% if prayers.has_next %}
+                                    <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                                    <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                                {% endif %}
                             </span>
-                            {% if prayers.has_next %}
-                                <a href="?page={{ prayers.next_page_number }}">Next</a>
-                            {% endif %}
-                            </span>
+                            <form method="get">
+                                <input type="text" name="page" size="5" maxlength="4">
+                                <input type="submit" value="Go To Page">
+                            </form>
                         </div>
                     {% else %}
                         <p>No prayers to display.</p>

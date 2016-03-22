@@ -1,6 +1,6 @@
 {% extends 'prayers/base.html' %}
 {% block content %}
-        
+
 
 <div class="masthead">
     <ul class="nav nav-justified text-right">
@@ -19,14 +19,14 @@
         </li>
     </ul>
 </div>
-    
-        
 
 
-    
+
+
+
 <div class="row">
     <div class="col-md-12 text-center">
-        <h2><small>All Prayer Requests</small></h2>        
+        <h2><small>All Prayer Requests</small></h2>
     </div>
 </div>
 
@@ -43,7 +43,7 @@
     </div>
 </div>
 
-    
+
 
 
 <div class="row">
@@ -55,7 +55,7 @@
                     <tr>
                         <th>User Name</th>
                         <th>User Email</th>
-                        
+
                         <th>Assigned To</th>
                         <th>Prayed At</th>
                         <th>Responded At</th>
@@ -64,8 +64,8 @@
                     </thead>
                 {% for prayer in prayers %}
                     <tbody>
-                    <tr {% if prayer.prayed_at and not prayer.response_at %} class="info" 
-                        {% elif prayer.prayed_at and prayer.assigned_to %} class="success" 
+                    <tr {% if prayer.prayed_at and not prayer.response_at %} class="info"
+                        {% elif prayer.prayed_at and prayer.assigned_to %} class="success"
                         {% elif not prayer.prayed_at and prayer.response_at %} class="warning"
                         {% elif not prayer.prayed_at and not prayer.response_at and prayer.assigned_to %} class="danger"
                         {% endif %}>
@@ -83,23 +83,27 @@
                         </td>
                     </tr>
                     </tbody>
-                    
-                    
-                
+
+
+
                 {% endfor %}
                 </table>
                 <div class="pagination">
                     <span class="step-links">
                         {% if prayers.has_previous %}
+                            <a href="?page=1">First</a> |
                             <a href="?page={{ prayers.previous_page_number }}">Previous</a>
                         {% endif %}
-                    <span class="current">
-                        Page {{ prayers.number }} of {{ prayers.paginator.num_pages }}
+                         | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                        {% if prayers.has_next %}
+                            <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                            <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                        {% endif %}
                     </span>
-                    {% if prayers.has_next %}
-                        <a href="?page={{ prayers.next_page_number }}">Next</a>
-                    {% endif %}
-                    </span>
+                    <form method="get">
+                        <input type="text" name="page" size="5" maxlength="4">
+                        <input type="submit" value="Go To Page">
+                    </form>
                 </div>
             {% else %}
                 <p>No prayers to display.</p>
@@ -107,7 +111,7 @@
         {% else %}
             Your status is currently Inactive. Contact administrator to activate account.
         {% endif %}
-        
+
     </div>
 </div>
 
