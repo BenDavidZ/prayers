@@ -184,7 +184,7 @@ def upload_prayers(request):
                             # fail the '@' symbol check. should only be a problem
                             # for prayer requests forwarded from another email box.
                             if sheet.cell_value(row, 3) in (rejected_emails) or '@' not in sheet.cell_value(row, 3):
-                                rownum += 1
+                                row += 1
                             else:
                                 # user_name = row[2]
                                 user_name = sheet.cell_value(row, 2)
