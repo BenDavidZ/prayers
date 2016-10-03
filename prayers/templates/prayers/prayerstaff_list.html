@@ -1,14 +1,20 @@
 {% extends 'prayers/base.html'%}
 {% block content %}
-<h1>All Staff</h1>
+
+<div class="message-boxes">
+    <div class="title-box">
+        All Staff
+    </div>
+</div>
 
 
 
-<div class="row">
+
+<div class="detail-section">
             <div class="col-md-12 ">
                 {% if user.is_active %}
                     {% if object_list %}
-                        <table class="table table-bordered table-hover">
+                        <table>
                             <thead>
                             <tr>
                                 <th>Staff Name</th>
@@ -27,9 +33,6 @@
                                 </td>
                             </tr>
                             </tbody>
-
-
-
                         {% endfor %}
                         </table>
                     {% else %}
@@ -55,11 +58,3 @@
 
 
 {% endblock %}
-
-
-
-
-
-
-
-

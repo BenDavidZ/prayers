@@ -2,118 +2,98 @@
 {% block content %}
 
 
-<div class="masthead">
-    <ul class="nav nav-justified text-right">
+    <div class="message-boxes">
+        <div class="title-box">
         {% if search_string %}
-        <li>
             <a href="{% url 'prayers:all-prayers' %}?q={{ search_string }}">Search: "{{ search_string }}"</a>
-        </li>
-
-        <li> <a href="{% url 'prayers:all-prayers' %}">Clear Search</a></li>{% endif %}
-
-        <li>
-            <form role="form" id="search" method="get" action="{% url 'prayers:all-prayers'  %}">
-            <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">
-            <button type="submit" class="btn btn-info" >Search</button>
-            </form>
-        </li>
-    </ul>
-</div>
-
-
-
-
-
-<div class="row">
-    <div class="col-md-12 text-center">
-        <h2><small>All Prayer Requests</small></h2>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <small><ul class="list-inline text-center">
-            <li><a href="{% url 'prayers:all-prayers-filter' id=1 %}">White</a> = Unassigned</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=2 %}">Green</a> = Prayed | Response Sent</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=3 %}">Blue</a> = Prayed | No Response Sent</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=4 %}">Yellow</a> = Not Prayed | Response Sent</li>
-            <li><a href="{% url 'prayers:all-prayers-filter' id=5 %}">Red</a> = Assigned | Not Prayed/Responded</li>
-            <li><a href="{% url 'prayers:all-prayers' %}">Remove Filter</a></li>
-        </ul></small>
-    </div>
-</div>
-
-
-
-
-<div class="row">
-    <div class="col-md-12 ">
-        {% if user.is_active %}
-            {% if prayers %}
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>User Email</th>
-
-                        <th>Assigned To</th>
-                        <th>Prayed At</th>
-                        <th>Responded At</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                {% for prayer in prayers %}
-                    <tbody>
-                    <tr {% if prayer.prayed_at and not prayer.response_at %} class="info"
-                        {% elif prayer.prayed_at and prayer.assigned_to %} class="success"
-                        {% elif not prayer.prayed_at and prayer.response_at %} class="warning"
-                        {% elif not prayer.prayed_at and not prayer.response_at and prayer.assigned_to %} class="danger"
-                        {% endif %}>
-                        <td>{{ prayer.user_name }}</td>
-                        <td>{{ prayer.user_email }}</td>
-                        <td>{{ prayer.assigned_to.username }}</td>
-                        <td>{{ prayer.prayed_at|date:"D d M Y" }}</td>
-                        <td>{{ prayer.response_at|date:"D d M Y" }}</td>
-                        <td>
-                            {% if user.is_superuser %}
-                                <a href="{% url 'prayers:admin-detail' pk=prayer.id %}{% if search_string %}?q={{ search_string }}{% endif %}">View</a>
-                            {% else %}
-                                <a href="{% url 'prayers:detail' pk=prayer.id %}">View</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    </tbody>
-
-
-
-                {% endfor %}
-                </table>
-                <div class="pagination">
-                    <span class="step-links">
-                        {% if prayers.has_previous %}
-                            <a href="?page=1">First</a> |
-                            <a href="?page={{ prayers.previous_page_number }}">Previous</a>
-                        {% endif %}
-                         | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
-                        {% if prayers.has_next %}
-                            <a href="?page={{ prayers.next_page_number }}">Next</a> |
-                            <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
-                        {% endif %}
-                    </span>
-                    <form method="get">
-                        <input type="text" name="page" size="5" maxlength="4">
-                        <input type="submit" value="Go To Page">
-                    </form>
-                </div>
-            {% else %}
-                <p>No prayers to display.</p>
-            {% endif %}
+        </div>
+        <div class="title-box">
+            <a href="{% url 'prayers:all-prayers' %}">Clear Search</a>
         {% else %}
-            Your status is currently Inactive. Contact administrator to activate account.
+            All Prayer Requests
         {% endif %}
-
+        </div>
+        <div class="title-box">
+            <form role="form" id="search" method="get" action="{% url 'prayers:all-prayers'  %}">
+            <input class="form-control search-input"id="searchbox" name="q" type="text" placeholder="Search">
+            <button type="submit" class="button" >Search</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- <pre> {% filter force_escape %} {% debug | linebreaks %} {% endfilter %} </pre> -->
-{% endblock %}
+    <div class="message-boxes">
+        <ul class="filter">
+            <li class="white"><a href="{% url 'prayers:all-prayers-filter' id=1 %}">Unassigned</a></li>
+            <li class="green"><a href="{% url 'prayers:all-prayers-filter' id=2 %}">Prayed | Response Sent</a></li>
+            <li class="blue"><a href="{% url 'prayers:all-prayers-filter' id=3 %}">Prayed | No Response Sent</a></li>
+            <li class="yellow"><a href="{% url 'prayers:all-prayers-filter' id=4 %}">Not Prayed | Response Sent</a></li>
+            <li class="red"><a href="{% url 'prayers:all-prayers-filter' id=5 %}">Assigned | Not Prayed/Responded</a></li>
+            <li><a href="{% url 'prayers:all-prayers' %}">Remove Filter</a></li>
+        </ul>
+    </div>
+
+
+
+    {% if prayers %}
+    {% for prayer in prayers %}
+    <div
+        {% if prayer.prayed_at and not prayer.response_at %} class="prayer-boxes info"
+        {% elif prayer.prayed_at and prayer.assigned_to %} class="prayer-boxes success"
+        {% elif not prayer.prayed_at and prayer.response_at %} class="prayer-boxes warning"
+        {% elif not prayer.prayed_at and not prayer.response_at and prayer.assigned_to %} class="prayer-boxes danger"
+        {% else %} class="prayer-boxes"
+        {% endif %}
+    >
+        <a href="{% url 'prayers:admin-detail' pk=prayer.id %}{% if search_string %}?q={{ search_string }}{% endif %}"</a>
+        <div class="box-top">
+            {{ prayer.originating_ministry }}
+        </div>
+        <div class="box-panel">
+            <span class="box-label">FROM</span><br />{{ prayer.user_name }}<br />
+            <span class="box-label">RECEIVED</span><br />{{ prayer.received_at|date:"D d M Y" }}<br />
+            <span class="box-label">ASSIGNED TO</span><br />{{ prayer.assigned_to }}<br />
+            {% if prayer.prayed_at %}
+            <span class="box-label">PRAYED AT</span><br />{{ prayer.prayed_at|date:"D d M Y" }}<br />
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+
+    <div id="pagination">
+        <form class="page-form" method="get">
+            <span class="step-links">
+                {% if prayers.has_previous and prayers.has_next %}
+                    <a href="?page=1">First</a> |
+                    <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                    | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                    <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                    <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                {% elif prayers.has_previous %}
+                    <a href="?page=1">First</a> |
+                    <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                    | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} | <span class="no-link"> Next | Last</span>
+                {% elif prayers.has_next %}
+                <span class="no-link"> First | Previous | </span>
+                Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                {% endif %}
+            </span>
+            {% if not prayers.has_next and not prayers.has_previous %}
+            {% else %}
+            <input class="form-control search-input" type="text" name="page" size="5" maxlength="4">
+            <input class="button" type="submit" value="Go To">
+            {% endif %}
+        </form>
+    </div>
+    {% else %}
+    <div class="message-boxes">
+        <div class="site-info"
+            <span>No Prayers to display.</span>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% endblock %}

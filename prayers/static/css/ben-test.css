@@ -1,0 +1,486 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #e36e20;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+a {
+    text-decoration: none;
+}
+
+div#container {
+    max-width: 95%;
+    max-height: 95%;
+    margin: 0 auto;
+    background: #ecf0f1;
+}
+div#header {
+    width: 100%;
+    height: 90px;
+    background: #2c3e50;
+}
+.logo {
+    padding-left: 50px;
+    padding-top: 11px;
+}
+nav {
+    width: 200px;
+    background-color: #fff;
+    float: left;
+}
+nav ul li {
+    list-style: none;
+}
+
+nav li a {
+    color: #95a5a6;
+    display: block;
+    padding: 12px;
+    font-size: 1.2em;
+    border-bottom: 1px solid black;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+}
+nav li a:hover {
+    background-color: #7f8c8d;
+    color: #fff;
+    padding-left: 30px;
+}
+.content {
+    width: auto;
+    margin-left: 200px;
+}
+
+.content:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.message-boxes {
+    width: auto;;
+    height: 75px;
+    background: #ecf0f1;
+    display: block;
+    border-bottom: 1px black solid;
+    list-style-type: none;
+}
+.message-boxes:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.message-boxes form {
+    display: inline-block;
+}
+.message-boxes input {
+    margin: 0;
+    width: 175px;
+    border: 5px solid white;
+    border-radius: 2px;
+}
+
+
+.site-info {
+    padding: 20px;
+    font-size: 2em;
+    display: inline-block;
+}
+
+.title-box {
+    background-color: rgba(46, 204, 113, 0.25);
+    color: #2c3e50;
+    height: 55px;
+    width: 30%;
+    margin: 15px 10px;
+    border-radius: 5px 5px 0px 0px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 55px;
+    display: inline-block;
+}
+.title-box a {
+    color: #2c3e50;
+    text-decoration: underline;
+}
+.faded {
+    background-color: rgba(149, 165, 166, 0.3);
+    color: rgba(52, 73, 94, 0.2);
+}
+.delete {
+    background-color: #e74c3c;
+    color: #2c3e50;
+}
+.amen {
+    background-color: #2980b9;
+    color: white;
+    border-radius: 5px;
+    height: 40px;
+    line-height: 40px;
+    width: 10%;
+    box-shadow: 3px 3px 5px #9f9f9f;
+}
+.amen a {
+    color: white;
+    text-decoration: none;
+}
+
+h1.welcome {
+    padding: 50px;
+    font-size: 2em;
+}
+h1.no-prayers {
+    padding: 50px;
+    font-size: 2em;
+}
+h1.inactive-account {
+    padding: 50px;
+    font-size: 2em;
+}
+
+div.message-box {
+    background-color: #2c3e50;
+    color: white;
+    margin-left: 10px;
+    height: 40px;
+    width: 30%;
+    border-radius: 5px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+    display: inline-block;
+    animation: cssAnimation 0s ease-in 5s forwards;
+    animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+    to {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+}
+.prayer-boxes {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 5px;
+    float: left;
+    background-color: white;
+    word-wrap: break-word;
+    box-shadow: 3px 3px 5px #9f9f9f;
+}
+.prayer-boxes:hover {
+    transform: scale(1.025, 1.025);
+}
+.prayer-boxes a{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    text-decoration: none;
+    color: #7f8c8d;
+}
+.success {
+    background-color: rgba(46, 204, 113, 0.25)
+}
+.info {
+    background-color: rgba(52, 152, 219, 0.25)
+}
+.warning {
+    background-color: rgba(241, 196, 15, 0.25)
+}
+.danger {
+    background-color: rgba(231, 76, 60, 0.25)
+}
+.box-top {
+    color: #fff;
+    background-color: #2c3e50;
+    padding: 5px;
+    font-size: 1.1em;
+}
+.box-panel {
+    padding: 7px;
+    font-size: .75em;
+    line-height: 150%;
+}
+.box-label {
+    font-weight: bold;
+    color: black;}
+
+.filter {
+    list-style-type: none;
+    font-size: 1.20em;
+    padding-top: 12px;
+}
+
+.filter li {
+    diplay: inline;
+    float: left;
+}
+.filter a {
+    color: black;
+    padding: 10px;
+}
+.filter li:hover{
+    transform: scale(1.075, 1.075);
+}
+.white {
+    background-color: white;
+}
+.green {
+    background-color: rgba(46, 204, 113, 0.25);
+}
+.blue {
+    background-color: rgba(52, 152, 219, 0.25);
+}
+.yellow {
+    background-color: rgba(241, 196, 15, 0.25);
+}
+.red {
+    background-color: rgba(231, 76, 60, 0.25);
+}
+
+
+#pagination {
+    clear: both;
+    width: auto;
+    margin-left: 200px;
+}
+div#pagination a {
+    color: #2c3e50;
+}
+div#pagination .page-form {
+    padding: 5px;
+}
+div#pagination .no-link {
+    color: #bdc3c7;
+}
+
+.page-search-input {
+    height: 35px;
+    width: 10%;
+}
+
+
+
+div#footer {
+    clear: both;
+    background: #2c3e50;
+    height: 45px;
+    width: 100%;
+    margin: 0 auto;
+
+}
+
+.detail-section {
+    background: white;
+    box-shadow: 3px 3px 5px #9f9f9f;
+    margin: 10px;
+}
+
+.detail-box {
+    float: left;
+    margin-top: 50px;
+    width: 30%;
+    margin: 10px;
+    word-wrap: break-word;
+}
+.detail-box-resources {
+    float: left;
+    margin-top: 50px;
+    width: 100%;
+    margin: 10px;
+    padding-right: 50px;
+    word-wrap: break-word;
+}
+
+.detail-section dl {
+    width: auto;
+    height: auto;
+}
+.detail-section dt {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.detail-section dd {
+    font-size: 0.9em;
+    padding: 2px 0 10px 20px;
+}
+select#soflow {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 97% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   /*font-size: inherit;*/
+   overflow: hidden;
+   padding: 5px 10px;
+   white-space: nowrap;
+   width: 150px;
+
+}
+
+.prayer-request-box {
+    float: left;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    word-wrap: break-word;
+}
+.prayer-request-box dl {
+    width: auto;
+    height: auto;
+
+
+}
+.prayer-request-box dt {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.prayer-request-box dd {
+    font-size: 0.9em;
+    font-family: arial;
+
+}
+
+.detail-section:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/*form {
+    padding: 20px;
+    width: 100%;
+    font-size:1.2em;
+    display: inline-block;
+}*/
+
+.login {
+    padding: 10px;
+    width: 100%;
+    font-size:1.2em;
+    display: inline-block;
+}
+
+.form-control {
+    height: 40px;
+    font-size: 1.1em;
+    margin-top: 5px;
+    padding-left: 10px;
+}
+
+.search-input {
+    height: 25px;
+    font-size: 1.0em;
+}
+
+/*input {
+    width: 30%;
+    height: 45px;
+    margin: 8px 0;
+    font-size: 0.9em;
+    padding: 10px;
+}*/
+
+table {
+    background: white;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    width: 100%;
+}
+
+thead {
+    width: 30%;
+}
+
+th, td {
+    border: 1px solid black;
+    height: 30px;
+    padding: 10px;
+}
+
+th {
+    height: 45px;
+}
+td a {
+    color: black;
+}
+
+
+.button{
+    background-color: #ecf0f1;
+    color: black;
+    margin-top: 10px;
+    width: 75px;
+    height: 25px;
+    border: 1px solid black;
+    box-shadow: 3px 3px 5px #9f9f9f;
+    border-radius: 5px;
+}
+
+.assign {
+    margin-top: 10px;
+    width: 150px;
+}
+
+.response-button {
+    background-color: #2980b9;
+    color: white;
+    width: 200px;
+    border: none;
+    font-size: 1.1em;
+}
+
+.confirm-delete {
+    background-color: #e74c3c;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+/*.submit-button {
+    background: #2980b9;
+    color: white;
+    width: 30%;
+    height: 40px;
+    margin: 10px 0 0 0;
+    font-size: 1.1em;
+    border-radius: 5px;
+
+}
+
+.page-search-submit {
+    background: #2980b9;
+    color: white;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.search-button {
+    width: 50px;
+}*/

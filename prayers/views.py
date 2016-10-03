@@ -56,7 +56,7 @@ def all_prayers_filter(request, id):
     else:
         prayer_list = Prayer.objects.all().order_by('received_at')
 
-    paginator = Paginator(prayer_list, 20)
+    paginator = Paginator(prayer_list, 12)
     page = request.GET.get('page')
     try:
         prayers = paginator.page(page)
@@ -264,7 +264,7 @@ def prayer_index(request):
         prayer_list = Prayer.objects.filter(assigned_to__username=request.user.username, prayed_at__isnull=True).order_by('received_at')
         prayer_count = prayer_list.count()
 
-    paginator = Paginator(prayer_list, 10)
+    paginator = Paginator(prayer_list, 12)
     page = request.GET.get('page')
     try:
         prayers = paginator.page(page)
@@ -295,7 +295,7 @@ def create_prayer(request):
     return render(request, 'prayers/prayer_create.html', {'form': form})
 
 
-@login_required
+# @login_required
 def resources_view(request):
     return render(request, 'prayers/prayer_resources.html')
 
@@ -355,7 +355,7 @@ def assign_prayer(request, pk):
     prayer.save()
 
     update_unprayed_count({'prayer': prayer, 'staff': staff})
-    messages.success(request, 'Request assigned.')
+    messages.success(request, 'Request Assigned')
 
     return HttpResponseRedirect(reverse('prayers:index'))
 
@@ -370,7 +370,7 @@ def all_prayers_view(request):
     else:
 
         prayer_list = Prayer.objects.all().order_by('-created_at')
-        paginator = Paginator(prayer_list, 20)
+        paginator = Paginator(prayer_list, 12)
         page = request.GET.get('page')
         try:
             prayers = paginator.page(page)
@@ -400,7 +400,7 @@ def respond_to_prayer(request, pk):
         send_mandrill_email('goTandem - Prayer Request Response', [response_address], context={'prayer_response': prayer.response_text})
     else:
         send_mandrill_email('BttB - Prayer Request Response', [response_address], context={'prayer_response': prayer.response_text})
-    messages.success(request, "Response sent.")
+    messages.success(request, "Response Sent")
     prayer.save()
 
     return HttpResponseRedirect(reverse('prayers:detail', args=[pk]))
@@ -438,7 +438,7 @@ def complete_prayer(request, pk):
     staff = User.objects.get(username=p.assigned_to.username)
     staff.employee.unprayed_count = Prayer.objects.filter(assigned_to=staff, prayed_at__isnull=True).count()
     staff.employee.save()
-    messages.success(request, 'Prayer marked as complete.')
+    messages.success(request, 'Prayer Marked as Complete')
     return HttpResponseRedirect(reverse('prayers:index'))
 
 
@@ -474,7 +474,7 @@ def staff_prayer_list(request, pk, id=0):
 
     prayer_staff = User.objects.get(id=pk)
 
-    paginator = Paginator(prayer_list, 15)
+    paginator = Paginator(prayer_list, 12)
     page = request.GET.get('page')
     try:
         prayers = paginator.page(page)

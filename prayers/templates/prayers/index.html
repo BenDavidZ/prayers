@@ -1,133 +1,99 @@
-{% extends 'prayers/base.html' %}
+    {% extends 'prayers/base.html' %}
 
+    {% block content %}
 
-{% block content %}
-
-{% if messages %}
-    <div class="row">
-        <div class="col-md-12 text-center">
-        {% for message in messages %}
-            <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
-        {% endfor %}
-       </div>
-    </div>
-{% endif %}
-
-{% if user.is_authenticated %}
-
-        <div class="row">
-            <div class="col-md-12 text-center">
-            {% if user.is_superuser %}
-                <h1>Welcome {{ user.first_name }} (Admin)</h1>
-                <h2><small>All Unassigned Prayer Requests<br>
-                <a href="{% url 'prayers:upload' %}">Upload Prayers</a></small></h2>
-            {% else %}
-
-                <h2><small>All Unfinished Prayer Requests for {{user.first_name }} {{ user.last_name }}</small></h2>
-            {% endif %}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 ">
-                {% if user.is_active %}
-                    {% if prayers %}
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>User Name</th>
-                                <th>User Email</th>
-                                <th>Ministry</th>
-                                <th>Received At</th>
-                                <!-- {% if user.is_superuser %}<th>Requested Staff</th>{% endif %} -->
-                                <th>{{ prayer_count }}</th>
-                            </tr>
-                            </thead>
-                        {% for prayer in prayers %}
-                            <tbody>
-                            <tr>
-                                <td>{{ prayer.user_name }}</td>
-                                <td>{{ prayer.user_email }}</td>
-                                <td>{{ prayer.originating_ministry }}</td>
-                                <td>{{ prayer.received_at|date:"D d M Y" }}</td>
-                            {% if user.is_superuser %}
-                                <td><a href="{% url 'prayers:admin-detail' pk=prayer.id %}">View</a></td>
-                            {% else %}
-                                <td><a href="{% url 'prayers:detail' pk=prayer.id %}">View</a></td>
-                            {% endif %}
-                            </tr>
-                            </tbody>
-
-
-
-                        {% endfor %}
-
-
-                        </table>
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if prayers.has_previous %}
-                                    <a href="?page=1">First</a> |
-                                    <a href="?page={{ prayers.previous_page_number }}">Previous</a>
-                                {% endif %}
-                                 | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
-                                {% if prayers.has_next %}
-                                    <a href="?page={{ prayers.next_page_number }}">Next</a> |
-                                    <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
-                                {% endif %}
-                            </span>
-                            <form method="get">
-                                <input type="text" name="page" size="5" maxlength="4">
-                                <input type="submit" value="Go To Page">
-                            </form>
-                        </div>
-                    {% else %}
-                        <p>No Prayers to display.</p>
-                    {% endif %}
+    {% if user.is_authenticated %}
+        <div class="message-boxes">
+            <div class="title-box">
+                {% if user.is_superuser %}
+                    Unassigned Requests
                 {% else %}
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <h2>Your status is currently Inactive. Contact administrator to activate account.</h2>
-                        </div>
-                    </div>
+                    Unprayed Requests
                 {% endif %}
-
             </div>
-
-
-    </div>
-
-
-{% else %}
-<div class="row">
-    <div class="col-md-12 text-center">
-        <h1> Welcome to the Prayer Place </h1>
-        <p>Please <a href="{% url 'prayers:login' %}">login </a>to continue.</p>
-    </div>
-</div>
-    {% if messages %}
-        <div class="row">
-            <div class="col-sm-12text-center">
+            {% if messages %}
                 {% for message in messages %}
-                   <p {% if message.tags == 'success' %} class="alert alert-success"{% endif %}>{{ message }}
+                <div class="message-box">
+                    {{ message }}
+                </div>
                 {% endfor %}
+            {% endif %}
+        </div>
+            {% if user.is_active %}
+                    {% if prayers %}
+                            {% for prayer in prayers %}
+                            <div class="prayer-boxes">
+                                <a href=
+                                {% if user.is_superuser %}
+                                    "{% url 'prayers:admin-detail' pk=prayer.id %}"
+                                {% else %}
+                                    "{% url 'prayers:detail' pk=prayer.id %}"
+                                {% endif %}
+                                </a>
+                                <div class="box-top">
+                                    {{ prayer.originating_ministry }}
+                                </div>
+                                <div class="box-panel">
+                                    <span class="box-label">FROM</span><br />{{ prayer.user_name }}<br />
+                                    <span class="box-label">RECEIVED</span><br />{{ prayer.received_at|date:"D d M Y" }}<br />
+                                    <span class="box-label">REQUEST</span><br />{{ prayer.user_request|truncatechars:78 }}<br />
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div id="pagination">
+                                <form class="page-form" method="get">
+                                    <span class="step-links">
+                                        {% if prayers.has_previous and prayers.has_next %}
+                                            <a href="?page=1">First</a> |
+                                            <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                                            | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                                            <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                                            <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                                        {% elif prayers.has_previous %}
+                                            <a href="?page=1">First</a> |
+                                            <a href="?page={{ prayers.previous_page_number }}">Previous</a>
+                                            | Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} | <span class="no-link"> Next | Last</span>
+                                        {% elif prayers.has_next %}
+                                        <span class="no-link"> First | Previous | </span>
+                                        Page {{ prayers.number }} of {{ prayers.paginator.num_pages }} |
+                                        <a href="?page={{ prayers.next_page_number }}">Next</a> |
+                                        <a href="?page={{ prayers.paginator.num_pages }}">Last </a>
+                                        {% endif %}
+                                    </span>
+                                    {% if not prayers.has_next and not prayers.has_previous %}
+                                    {% else %}
+
+                                        <input class="form-control search-input" type="text" name="page" size="5" maxlength="4">
+                                        <input class="button" type="submit" value="Go To">
+
+                                    {% endif %}
+                                </form>
+                            </div>
+                    {% else %}
+                        <div class="message-boxes">
+                            <div class="site-info"
+                                <span>No Prayers to display.</span>
+                            </div>
+                        </div>
+
+                    {% endif %}
+            {% else %}
+                <div class="site-info">
+                    <span>Your status is currently Inactive.<br />
+                        Contact administrator to activate account.</span>
+                </div>
+            {% endif %}
+    {% else %}
+        <div class="message-boxes">
+            <div class="title-box">
+                <span>Welcome!</span>
             </div>
         </div>
+        <div class="site-info">
+            <span>Please login to continue.</span>
+        </div>
+
+
     {% endif %}
 
-    <!-- <p>We'd love to pray for you.<br />
-    <a href="{% url 'prayers:create' %}">Click here</a> to leave a prayer request.</p> -->
-
-
-
-
-
-
-
-
-
-{% endif %}
-
-
-
-{% endblock %}
+    {% endblock %}
