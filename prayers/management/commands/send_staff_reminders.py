@@ -9,9 +9,9 @@ import sys
 class Command(BaseCommand):
     help = 'Send email to staff members with 1 or more unprayed requests.'
 
-    # check the day of week. only run script on Friday (4)
+    # check the day of week. only run script on Thrusday (3)
     d = datetime.now()
-    if d.weekday() != 4:
+    if d.weekday() != 3:
         sys.exit()
 
 
